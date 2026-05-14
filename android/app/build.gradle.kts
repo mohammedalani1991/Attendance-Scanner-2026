@@ -49,12 +49,15 @@ android {
     }
     buildTypes {
         release {
-            // Use release signing if key.properties exists, otherwise use debug signing
             signingConfig = if (keystorePropertiesFile.exists()) {
                 signingConfigs.getByName("release")
             } else {
                 signingConfigs.getByName("debug")
             }
+            // Disable R8 minification — it strips plugin classes that use reflection
+            // (sqflite, mobile_scanner, audioplayers). Re-enable only after adding proguard rules.
+            isMinifyEnabled = false
+            isShrinkResources = false
         }
     }
 }
